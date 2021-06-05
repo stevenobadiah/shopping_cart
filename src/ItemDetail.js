@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import './App.css';
-import Cart from './Cart';
+
+var timer;
 
 function ItemDetail({match}) {
     const [item, setItem] = useState({})
@@ -12,30 +12,9 @@ function ItemDetail({match}) {
 
     const [count, setCount] = useState(0)
     useEffect(() => {
-        document.getElementById('tax').innerHTML = "Tax (8.75%): " + ((count * item.price) * .0875).toFixed(2)
-        document.getElementById('totalCost').innerHTML = "Total: " + ((count * item.price) * 1.0875).toFixed(2)
+        document.getElementById('tax').innerHTML = "Tax (8.75%): $" + ((count * item.price) * .0875).toFixed(2)
+        document.getElementById('totalCost').innerHTML = "Total: $" + ((count * item.price) * 1.0875).toFixed(2)
     }, [count]);
-
-//USE THIS LOGIC FOR CART
-    //useEffect(() => {
-    //    let tempCount = JSON.parse(window.localStorage.getItem('count'));
-    //    if (tempCount === undefined) {
-    //        setCount(1)
-    //    } else {
-    //       setCount(tempCount);
-    //    }
-    //    console.log(count)
-    //    console.log("top")
-
-    //}, []);
-
-    //useEffect(() => {
-    //    document.getElementById('tax').innerHTML = "Tax (8.75%): " + ((count * item.price) * .0875).toFixed(2)
-    //    document.getElementById('totalCost').innerHTML = "Total: " + ((count * item.price) * 1.0875).toFixed(2)
-    //    window.localStorage.setItem('count', count);
-    //    console.log(count)
-    //    console.log("bottom")
-    //}, [count]);
 
     const [cart, setCart] = useState([])
     useEffect(() => {
@@ -56,6 +35,14 @@ function ItemDetail({match}) {
         for (var i = count; i > 0; --i) {
             setCart(cart => [...cart, item])
         }
+        document.getElementById('addConfirmation').style.display = "block"
+        document.getElementById('addConfirmation').innerHTML = `${count} of this item has been added to your cart`;
+        clearTimeout(timer)
+        timer = setTimeout(function(){
+            if (document.getElementById('addConfirmation')){
+                document.getElementById('addConfirmation').style.display = "none"
+            }
+        }, 3000)
     }
 
     const fetchItem = async () => {
@@ -83,7 +70,7 @@ function ItemDetail({match}) {
             <div id="purchasePanel">
                 <h1 id="itemTitle">{item.title}</h1>
                 <p id="itemDescription">{item.description}</p>
-                <h2 id="itemPrice">{item.price}</h2>
+                <h2 id="itemPrice">${item.price}</h2>
                 <div id="quantityController">
                     <button id="downButton" onClick={downInterval}>-</button>
                     <h5>{count}</h5>
@@ -92,6 +79,7 @@ function ItemDetail({match}) {
                 <button id="btnAddItem" onClick={addToCart}>Add To Cart</button>
                 <h4 id="tax">Tax (8.75%): </h4>
                 <h3 id="totalCost">Cost: </h3>
+                <h4 id="addConfirmation"></h4>
             </div>
         </div>
     )

@@ -77,7 +77,7 @@ function Shop() {
       <div id="itemsContainer">
         {filteredItems.map(item => (
           <Link to={`/shop/${item.id}`} key={item.id} className="item-div">
-            <h1 class="item-title">{item.title}</h1>
+            <h1 className={"item-title"}>{item.title}</h1>
             <img className={'item-image'} src={item.image} alt={item.title}/>
           </Link>
         ))}
